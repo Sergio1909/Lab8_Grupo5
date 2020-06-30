@@ -1,5 +1,6 @@
 package sw2.lab6.teletok.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,8 @@ import sw2.lab6.teletok.repository.PostRepository;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+
+import java.util.HashMap;
 
 @RestController
 @CrossOrigin
@@ -54,8 +57,13 @@ public class PostController {
         return "";
     }
 
-    @GetMapping("/post/{id}")
-    public String viewPost() {
+    @GetMapping(value = {"/ws/post/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity viewPost() {
+
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+
+
         return "post/view";
     }
 
