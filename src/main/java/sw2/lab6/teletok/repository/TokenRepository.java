@@ -15,4 +15,13 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
             "where user_id = ?1;", nativeQuery = true)
     Token token(int id);
 
+
+
+    @Query(value = "  Select t.code from token t \n" +
+            "inner join user u on t.user_id  = u.id\n" +
+            "inner join post p on u.id = p.user_id where u.id = ?1", nativeQuery = true)
+    String obtenerToken(int id);
+
+
+
 }

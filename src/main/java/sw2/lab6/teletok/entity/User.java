@@ -26,6 +26,8 @@ public class User implements Serializable {
     @Column(name = "role_id", nullable = false)
     private int roleId;
 
+
+
     public int getId() {
         return id;
     }
