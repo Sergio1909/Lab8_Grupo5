@@ -3,7 +3,8 @@ package sw2.lab6.teletok.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@CrossOrigin
 public class PostController {
 
     @GetMapping(value = {"", "/"})
@@ -17,7 +18,10 @@ public class PostController {
     }
 
     @PostMapping("/post/save")
-    public String savePost() {
+    public String savePost()
+    {
+
+
         return "redirect:/";
     }
 
