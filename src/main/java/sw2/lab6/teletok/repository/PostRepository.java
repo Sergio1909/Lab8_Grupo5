@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             nativeQuery = true)
     List<Post> buscadorPost(String search);
 
+
+
 }

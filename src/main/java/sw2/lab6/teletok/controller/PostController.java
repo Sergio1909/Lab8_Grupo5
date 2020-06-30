@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sw2.lab6.teletok.entity.Post;
@@ -66,6 +68,26 @@ public class PostController {
     public String postLike() {
         return "";
     }
+
+    @PostMapping (value = "/ws/post/like", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity likeAPost (@RequestParam("token") String code,
+                                     @RequestParam("postId") int id) {
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String contra = passwordEncoder.encode(password);
+        boolean match = passwordEncoder.matches(passworddb, contra);
+        if (match){
+            responseMap.put("status", "AUTHENTICATED");
+            responseMap.put("token", tokenuserdb.getCode());
+            return new ResponseEntity(responseMap, HttpStatus.OK);
+        }else {
+            responseMap.put("error", "AUTH_FAILED");
+            return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(responseMap, HttpStatus.CREATED);
+    }
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity gestionExcepcion(HttpServletRequest request) {
