@@ -20,6 +20,7 @@ import sw2.lab6.teletok.repository.UserRepository;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Random;
 
 @RestController
 @CrossOrigin
@@ -31,24 +32,28 @@ public class UserController {
     TokenRepository tokenRepository;
 
     @PostMapping( value = {"/ws/user/signIn"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity signIn(@RequestParam("username") String username,
-                                 @RequestParam("password") String password){
+    public ResponseEntity signIn(@RequestBody User user12){
 
 
         HashMap<String, Object> responseMap =new HashMap<>();
 
-        User user1 = userRepository.findByUsername(username);
-        Token tokenuserdb = tokenRepository.token(user1.getId());
-        String passworddb = user1.getPassword();
+        User user1 = userRepository.findByUsername(user12.getUsername());
 
+        System.out.println(user1.getPassword());
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String contra = passwordEncoder.encode(password);
-        boolean match = passwordEncoder.matches(passworddb, contra);
+        String contra = passwordEncoder.encode(user12.getPassword());
+        boolean match = passwordEncoder.matches(contra, user1.getPassword());
 
         if (match){
+
+            Token nuevoToken = new Token();
+            Random random = new Random();
+            nuevoToken.setCode(random.toString());
+            nuevoToken.setUser(user1);
+            tokenRepository.save(nuevoToken);
             responseMap.put("status", "AUTHENTICATED");
-            responseMap.put("token", tokenuserdb.getCode());
+            responseMap.put("token", nuevoToken.getCode());
             return new ResponseEntity(responseMap, HttpStatus.OK);
         }else {
             responseMap.put("error", "AUTH_FAILED");

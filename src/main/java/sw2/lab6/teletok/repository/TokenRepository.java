@@ -13,7 +13,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 
     @Query(value = "SELECT * FROM teletok.token\n" +
             "where user_id = ?1;", nativeQuery = true)
-    Token token(int id);
+    public Token token(int id);
 
 
 
