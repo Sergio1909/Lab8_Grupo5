@@ -148,18 +148,18 @@ public class PostController {
                                      @RequestParam("postId") int id) {
         HashMap<String, Object> responseMap = new HashMap<>();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String contra = passwordEncoder.encode(password);
-        boolean match = passwordEncoder.matches(passworddb, contra);
-        if (match){
+       // String contra = passwordEncoder.encode(password);
+     //   boolean match = passwordEncoder.matches(passworddb, contra);
+      //  if (match){
             responseMap.put("status", "AUTHENTICATED");
-            responseMap.put("token", tokenuserdb.getCode());
+         //   responseMap.put("token", tokenuserdb.getCode());
             return new ResponseEntity(responseMap, HttpStatus.OK);
-        }else {
-            responseMap.put("error", "AUTH_FAILED");
-            return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
-        }
+     //   }else {
+      //      responseMap.put("error", "AUTH_FAILED");
+     //       return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
+     //   }
 
-        return new ResponseEntity(responseMap, HttpStatus.CREATED);
+        //return new ResponseEntity(responseMap, HttpStatus.CREATED);
     }
 
 
