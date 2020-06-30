@@ -2,6 +2,8 @@ package sw2.lab6.teletok.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,7 @@ import sw2.lab6.teletok.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
 
 @RestController
 @CrossOrigin
@@ -22,8 +25,23 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping("/user/signIn")
-    public String signIn(){
+
+    @PostMapping( value = {"/ws/user/signIn"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity signIn(@RequestParam("username") String username,
+                                 @RequestParam("password") String password){
+
+
+        HashMap<String, Object> responseMap =new HashMap<>();
+
+        User user1 = userRepository.findByUsername(username);
+        String passworddb = user1.getPassword();
+        if (user1.getPassword() != null){
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String contra = passwordEncoder.encode(password);
+            boolean match = passwordEncoder.matches(passworddb, contra);
+            responseMap.put("status", "AUTHENTICATED");
+            responseMap.put("token", user1.);
+        }
 
 
 
