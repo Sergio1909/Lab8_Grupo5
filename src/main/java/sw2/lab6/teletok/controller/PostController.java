@@ -1,7 +1,11 @@
 package sw2.lab6.teletok.controller;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @CrossOrigin
@@ -30,8 +34,13 @@ public class PostController {
         return "";
     }
 
-    @GetMapping("/post/{id}")
-    public String viewPost() {
+    @GetMapping(value = {"/ws/post/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity viewPost() {
+
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+
+
         return "post/view";
     }
 
