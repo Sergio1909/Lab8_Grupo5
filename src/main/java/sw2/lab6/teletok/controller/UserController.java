@@ -2,6 +2,7 @@ package sw2.lab6.teletok.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sw2.lab6.teletok.entity.Token;
 import sw2.lab6.teletok.entity.User;
+import sw2.lab6.teletok.repository.TokenRepository;
 import sw2.lab6.teletok.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
@@ -24,7 +27,8 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    TokenRepository tokenRepository;
 
     @PostMapping( value = {"/ws/user/signIn"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity signIn(@RequestParam("username") String username,
@@ -34,20 +38,23 @@ public class UserController {
         HashMap<String, Object> responseMap =new HashMap<>();
 
         User user1 = userRepository.findByUsername(username);
+        Token tokenuserdb = tokenRepository.token(user1.getId());
         String passworddb = user1.getPassword();
-        if (user1.getPassword() != null){
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String contra = passwordEncoder.encode(password);
-            boolean match = passwordEncoder.matches(passworddb, contra);
+
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String contra = passwordEncoder.encode(password);
+        boolean match = passwordEncoder.matches(passworddb, contra);
+
+        if (match){
             responseMap.put("status", "AUTHENTICATED");
-            responseMap.put("token", user1.);
+            responseMap.put("token", tokenuserdb.getCode());
+            return new ResponseEntity(responseMap, HttpStatus.OK);
+        }else {
+            responseMap.put("error", "AUTH_FAILED");
+            return new ResponseEntity(responseMap, HttpStatus.BAD_REQUEST);
         }
 
-
-
-
-
-        return "user/signIn";
     }
 
     @GetMapping("/user/signInRedirect")
